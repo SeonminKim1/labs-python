@@ -31,5 +31,8 @@ uv run python ex1.py
 | 4 | `ex4.py` | 수정 (`set`, `inc`, `find().update`, `Push`) + 읽어둔 객체 미갱신, `save()` lost update 함정, `save()` vs `replace()` |
 | 5 | `ex5.py` | 삭제 (`delete`, `find().delete`, `find_one().delete`) + sort/limit이 무시되는 삭제 범위 함정 |
 | 6 | `ex6.py` | 정렬, `skip`/`limit` vs keyset 페이지네이션, 쿼리 객체가 바뀌는 `count` 함정, projection 모델 |
+| 7 | `ex7.py` | 중첩 모델·리스트 필드 조회 (dot 경로, 배열 매칭, `All`, `ElemMatch`) + 원소 간 조건 분산 함정 |
+| 8 | `ex8.py` | upsert (`find_one().upsert`, `update(upsert=True)`) + `on_insert` 동작·반환 타입 함정 |
+| 9 | `ex9.py` | 상태 관리 (`use_state_management`, `get_changes`, `save_changes`) + 같은 필드 충돌·`save()` 함정 |
 
 (예제를 추가/수정할 때마다 이 표도 같이 갱신한다.)
