@@ -28,40 +28,30 @@ async def main():
         ])
 
         # 1. get - _id로 한 건 조회. 없는 id면 예외가 아니라 None
-        print("1) get:", (await Book.get(result.inserted_ids[0])).title)
-        print("1) get(없는 id):", await Book.get(PydanticObjectId()))
+        print("1) get:", (await Book.get(result.inserted_ids[0])).title, "/", await Book.get(PydanticObjectId()))
 
-        # 2. find_one - 조건에 맞는 첫 문서. 필드 비교식이 그대로 Mongo 필터가 된다
-        book = await Book.find_one(Book.author == "Fowler")
-        print("2) find_one:", book.title)
+        # 2. find_one - 조건에 맞는 첫 문서
+        print("2) find_one:", (await Book.find_one(Book.author == "Fowler")).title)
 
-        # 3. find + to_list - 여러 건. 인자를 여러 개 주면 AND
-        books = await Book.find(Book.author == "Martin", Book.year >= 2010).to_list()
-        print("3) find AND:", [b.title for b in books])
+        # 3. find - 필드 비교식이 Mongo 필터로 바뀐다. 조건을 여러 개 주면 AND
+        query = Book.find(Book.author == "Martin", Book.year >= 2010)
+        print("3) 필터:", query.get_filter_query(), "→", [b.title for b in await query.to_list()])
 
         # 4. 연산자 함수 (beanie.operators) - In, GTE 등
         books = await Book.find(In(Book.author, ["Fowler", "Ramalho"]), GTE(Book.price, 40000)).to_list()
         print("4) operators:", [b.title for b in books])
 
-        # 5. dict 필터도 그대로 쓸 수 있다 (pymongo 문법) - 필드명 오타를 못 잡으므로 식 문법 권장
-        books = await Book.find({"year": {"$lt": 2015}}).to_list()
-        print("5) dict filter:", [b.title for b in books])
+        # 5. dict 필터 (pymongo 문법)도 된다 - 단, 필드명 오타를 못 잡으므로 식 문법 권장
+        print("5) dict:", [b.title for b in await Book.find({"year": {"$lt": 2015}}).to_list()])
 
-        # 6. 비동기 반복 - 결과가 많을 때 to_list() 대신 한 건씩 처리
-        print("6) async for:", end=" ")
+        # 6. async for - 결과가 많을 때 to_list()로 전부 올리지 않고 한 건씩 처리
         async for b in Book.find(Book.price < 33000):
-            print(b.title, end=" / ")
-        print()
+            print("6) async for:", b.title)
 
-        # 7. 실제로 만들어지는 Mongo 필터 확인
-        print("7) query:", Book.find(Book.author == "Martin", Book.year >= 2010).get_filter_query())
-
-        # 8. 함정: 파이썬 and/or는 쓰면 안 된다 - 에러 없이 한쪽 식만 남는다 → Or / And 사용
-        #    (`or`는 앞의 식만, `and`는 뒤의 식만 남는다. 7의 get_filter_query()로 확인)
-        wrong = Book.find(Book.year < 2010 or Book.author == "Ramalho")
-        print("8) or 사용  :", wrong.get_filter_query(), [b.title for b in await wrong.to_list()])
-        right = Book.find(Or(Book.year < 2010, Book.author == "Ramalho"))
-        print("8) Or() 사용:", right.get_filter_query(), [b.title for b in await right.to_list()])
+        # 7. 함정: 파이썬 and/or는 에러 없이 한쪽 식만 남긴다 (`or`는 앞, `and`는 뒤) → Or / And 사용
+        for label, q in [("or  ", Book.find(Book.year < 2010 or Book.author == "Ramalho")),
+                         ("Or()", Book.find(Or(Book.year < 2010, Book.author == "Ramalho")))]:
+            print(f"7) {label}:", q.get_filter_query(), "→", [b.title for b in await q.to_list()])
 
 
 if __name__ == "__main__":
