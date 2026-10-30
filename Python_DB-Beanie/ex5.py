@@ -1,4 +1,4 @@
-"""ex5: 문서 삭제 (delete, find().delete, find_one().delete)와 삭제 범위 함정."""
+"""ex5: 문서 삭제 (delete, find().delete, find_one().delete)와 삭제 범위 주의점."""
 import asyncio
 
 from beanie import Document
@@ -47,7 +47,7 @@ async def main():
         await target.delete()
         print("4) 삭제 대상:", target.title, "→", await remaining())
 
-        # 5. 함정: 같은 일을 find().sort().limit(1).delete()로 하면 sort/limit이 무시되어 조건에 맞는 전부가 지워진다
+        # 5. 주의: 같은 일을 find().sort().limit(1).delete()로 하면 sort/limit이 무시되어 조건에 맞는 전부가 지워진다
         result = await Task.find(Task.status == "todo").sort(+Task.priority).limit(1).delete()
         print("5) deleted:", result.deleted_count, "→", await remaining())
 

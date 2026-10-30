@@ -40,7 +40,7 @@ async def main():
         await stale.save_changes()
         print("3) 같은 필드:", await raw(acc))
 
-        # 4. 함정: 상태 관리를 켜도 save()는 여전히 모든 필드를 덮어쓴다 (+500이 사라지고 0)
+        # 4. 주의: 상태 관리를 켜도 save()는 여전히 모든 필드를 덮어쓴다 (+500이 사라지고 0)
         #    → 바뀐 필드만 저장하려면 save_changes()
         stale = await Account.get(acc.id)
         await acc.inc({Account.balance: 500})

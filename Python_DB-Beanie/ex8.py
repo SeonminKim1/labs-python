@@ -29,7 +29,7 @@ async def main():
             result = await Stock.find_one(Stock.sku == "A").upsert(Inc({Stock.qty: 5}), on_insert=Stock(sku="A", qty=1))
             print("1)", type(result).__name__, "→", await stocks())
 
-        # 2. 함정: on_insert는 조건과 상관없이 그대로 들어간다
+        # 2. 주의: on_insert는 조건과 상관없이 그대로 들어간다
         #    조건(sku == "B")과 다른 값(sku="b")을 넣으면 다음 호출도 못 찾아서 또 삽입한다
         for _ in range(2):
             await Stock.find_one(Stock.sku == "B").upsert(Inc({Stock.qty: 1}), on_insert=Stock(sku="b", qty=1))

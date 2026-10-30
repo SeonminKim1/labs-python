@@ -1,4 +1,4 @@
-"""ex2: 문서 삽입 (insert, insert_many, save)과 pydantic 검증 함정."""
+"""ex2: 문서 삽입 (insert, insert_many, save)과 pydantic 검증 시 주의점."""
 import asyncio
 
 from beanie import Document
@@ -33,7 +33,7 @@ async def main():
         await p.insert()
         print("1) insert id:", p.id)
 
-        # 2. 함정: insert_many는 넘긴 객체의 id를 채우지 않는다 → result.inserted_ids 사용
+        # 2. 주의: insert_many는 넘긴 객체의 id를 채우지 않는다 → result.inserted_ids 사용
         items = [Product(name="mouse", price=20000), Product(name="monitor", price=300000)]
         result = await Product.insert_many(items)
         print("2) inserted_ids:", result.inserted_ids, "/ 객체 id:", [i.id for i in items])
@@ -49,7 +49,7 @@ async def main():
         except ValidationError as e:
             print("4) 생성 시 ValidationError:", e.errors()[0]["msg"])
 
-        # 5. 함정: 생성 후 속성 대입은 검증되지 않는다. save()는 DB에 먼저 쓰고 나서
+        # 5. 주의: 생성 후 속성 대입은 검증되지 않는다. save()는 DB에 먼저 쓰고 나서
         #    결과를 다시 읽다가 에러를 낸다 → 에러가 났는데도 잘못된 값은 이미 저장돼 있다
         p.price = -1
         try:

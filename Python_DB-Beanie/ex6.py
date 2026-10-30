@@ -39,7 +39,7 @@ async def main():
         query = Product.find(Product.category == "book").sort(+Product.name)
         print("2) 2페이지:", [p.name for p in await query.skip(3).limit(3).to_list()])
 
-        # 3. 함정: skip()/limit()은 새 쿼리가 아니라 query 객체 자체를 바꾼다
+        # 3. 주의: skip()/limit()은 새 쿼리가 아니라 query 객체 자체를 바꾼다
         #    → 2의 query로 count()하면 전체가 아니라 2페이지 범위만 센다. 전체 개수는 새 쿼리로
         print("3) 2의 query:", await query.count(), "/ 새 쿼리:", await Product.find(Product.category == "book").count())
 

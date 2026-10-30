@@ -1,4 +1,4 @@
-"""ex4: 문서 수정 (set, inc, find().update)과 save()/replace()의 덮어쓰기 함정."""
+"""ex4: 문서 수정 (set, inc, find().update)과 save()/replace()의 덮어쓰기 동작."""
 import asyncio
 
 from beanie import Document
@@ -29,11 +29,11 @@ async def main():
         print("1) local:", alice.balance, "/ db:", await raw(alice))
 
         # 2. find().update - 조건에 맞는 문서 전부 수정 (Push 같은 배열 연산자도 beanie.operators에 있다)
-        #    함정: 이미 읽어둔 객체는 갱신되지 않는다 → 필요하면 다시 조회
+        #    주의: 이미 읽어둔 객체는 갱신되지 않는다 → 필요하면 다시 조회
         result = await Account.find(Account.balance > 0).update(Inc({Account.balance: 1}), Push({Account.tags: "event"}))
         print("2) modified:", result.modified_count, "/ alice local:", alice.balance, "/ db:", await raw(alice))
 
-        # 3. 함정: save()는 바꾼 필드만이 아니라 모델의 모든 필드를 덮어쓴다
+        # 3. 주의: save()는 바꾼 필드만이 아니라 모델의 모든 필드를 덮어쓴다
         #    → 오래된 객체로 save()하면 그 사이 바뀐 값이 사라진다 (lost update)
         stale = await Account.get(bob.id)  # 다른 요청이 읽어둔 객체라고 가정
         await bob.inc({Account.balance: 1000})  # 그 사이 입금

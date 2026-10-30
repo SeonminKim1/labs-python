@@ -54,7 +54,7 @@ async def main():
         # 4. 하위 문서 배열의 필드 - items 중 하나라도 sku가 A면 매칭
         print("4) items.sku == A:", await customers(Order.find(Order.items.sku == "A")))
 
-        # 5. 함정: 하위 문서 조건을 따로 주면 서로 다른 원소가 나눠서 만족해도 매칭된다
+        # 5. 주의: 하위 문서 조건을 따로 주면 서로 다른 원소가 나눠서 만족해도 매칭된다
         #    alice는 A(qty 1)와 B(qty 5)가 조건을 하나씩 만족해서 걸린다 → 한 원소에 모두 걸려면 ElemMatch
         print("5) 따로   :", await customers(Order.find(Order.items.sku == "A", Order.items.qty >= 3)))
         print("5) ElemMatch:", await customers(Order.find(ElemMatch(Order.items, {"sku": "A", "qty": {"$gte": 3}}))))

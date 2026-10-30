@@ -48,7 +48,7 @@ async def main():
         async for b in Book.find(Book.price < 33000):
             print("6) async for:", b.title)
 
-        # 7. 함정: 파이썬 and/or는 에러 없이 한쪽 식만 남긴다 (`or`는 앞, `and`는 뒤) → Or / And 사용
+        # 7. 주의: 파이썬 and/or는 에러 없이 한쪽 식만 남긴다 (`or`는 앞, `and`는 뒤) → Or / And 사용
         for label, q in [("or  ", Book.find(Book.year < 2010 or Book.author == "Ramalho")),
                          ("Or()", Book.find(Or(Book.year < 2010, Book.author == "Ramalho")))]:
             print(f"7) {label}:", q.get_filter_query(), "→", [b.title for b in await q.to_list()])

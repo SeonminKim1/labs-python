@@ -26,13 +26,16 @@ uv run python ex1.py
 | # | 파일 | 내용 |
 |---|------|------|
 | 1 | `ex1.py` | `Document` 정의 + `init_beanie` 연결, `id` ↔ `_id` 저장 모양 |
-| 2 | `ex2.py` | 삽입 (`insert`, `insert_many`, `save`) + `insert_many` id 함정, 에러가 나도 저장되는 검증 함정과 `validate_on_save` |
-| 3 | `ex3.py` | 조회 (`get`, `find_one`, `find`, 필드 비교식, `beanie.operators`, dict 필터, `and`/`or` 함정) |
-| 4 | `ex4.py` | 수정 (`set`, `inc`, `find().update`, `Push`) + 읽어둔 객체 미갱신, `save()` lost update 함정, `save()` vs `replace()` |
-| 5 | `ex5.py` | 삭제 (`delete`, `find().delete`, `find_one().delete`) + sort/limit이 무시되는 삭제 범위 함정 |
-| 6 | `ex6.py` | 정렬, `skip`/`limit` vs keyset 페이지네이션, 쿼리 객체가 바뀌는 `count` 함정, projection 모델 |
-| 7 | `ex7.py` | 중첩 모델·리스트 필드 조회 (dot 경로, 배열 매칭, `All`, `ElemMatch`) + 원소 간 조건 분산 함정 |
-| 8 | `ex8.py` | upsert (`find_one().upsert`, `update(upsert=True)`) + `on_insert` 동작·반환 타입 함정 |
-| 9 | `ex9.py` | 상태 관리 (`use_state_management`, `get_changes`, `save_changes`) + 같은 필드 충돌·`save()` 함정 |
+| 2 | `ex2.py` | 삽입 (`insert`, `insert_many`, `save`), `validate_on_save` — 주의: `insert_many`는 객체 id를 안 채움, 에러가 나도 잘못된 값이 저장됨 |
+| 3 | `ex3.py` | 조회 (`get`, `find_one`, `find`, 필드 비교식, `beanie.operators`, dict 필터) — 주의: 파이썬 `and`/`or` |
+| 4 | `ex4.py` | 수정 (`set`, `inc`, `find().update`, `Push`), `save()` vs `replace()` — 주의: 읽어둔 객체는 갱신 안 됨, `save()` lost update |
+| 5 | `ex5.py` | 삭제 (`delete`, `find().delete`, `find_one().delete`) — 주의: delete에는 sort/limit이 적용 안 됨 |
+| 6 | `ex6.py` | 정렬, `skip`/`limit` vs keyset 페이지네이션, `count`, projection 모델 — 주의: `skip`/`limit`이 쿼리 객체를 바꿈 |
+| 7 | `ex7.py` | 중첩 모델·리스트 필드 조회 (dot 경로, 배열 매칭, `All`, `ElemMatch`) — 주의: 조건이 원소끼리 나뉘어 매칭됨 |
+| 8 | `ex8.py` | upsert (`find_one().upsert`, `update(upsert=True)`) — 주의: `on_insert` 동작, 반환 타입 |
+| 9 | `ex9.py` | 상태 관리 (`use_state_management`, `get_changes`, `save_changes`) — 주의: 같은 필드 충돌, `save()`는 여전히 전체 저장 |
+| 10 | `ex10.py` | 이벤트 훅 (`before_event`)으로 `updated_at` 자동 설정 — 주의: 이벤트 목록, 쿼리 단위 작업에선 훅이 안 돎 |
+| 11 | `ex11.py` | 낙관적 락 (`use_revision`, `RevisionIdWasChanged`, 재시도) — 주의: `find().update()`는 revision을 거치지 않음 |
+| 12 | `ex12.py` | 인덱스 (`Indexed`, `Settings.indexes`, `explain`), unique + `DuplicateKeyError`, 동시 upsert 중복 막기 |
 
 (예제를 추가/수정할 때마다 이 표도 같이 갱신한다.)
