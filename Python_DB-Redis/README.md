@@ -34,3 +34,9 @@ uv run python ex1.py
 | 9 | `ex9.py` | [패턴 2] 인증번호: TTL 만료, 성공 시 삭제(1회용), 실패 횟수 제한 |
 | 10 | `ex10.py` | [패턴 3] 분산 락: `SET NX PX`, 토큰 확인 해제(Lua `register_script`), `r.lock`, 캐시 스탬피드 + double-check |
 | 11 | `ex11.py` | [패턴 4] Rate Limit: 고정 윈도우(`incr` + `expire(nx=)`), 슬라이딩 윈도우(Sorted Set) |
+| 12 | `ex12.py` | [패턴 5] 최근 본 상품: `lrem` → `lpush` → `ltrim` + `expire`를 파이프라인으로 |
+| 13 | `ex13.py` | [패턴 6] 분산 세션: Hash 세션, 요청마다 TTL 연장(sliding expiration), 필드 단위 수정 |
+| 14 | `ex14.py` | [패턴 7] 조회수·좋아요: `set(nx, ex)` 중복 조회 제거, `sadd` 좋아요 판정, `getdel` write-back |
+| 15 | `ex15.py` | [패턴 8] 실시간 랭킹: `zincrby`, 일별 키 + `zunionstore` 주간 합산, 동점 시 먼저 달성 우선, DB로 복구 |
+
+제외: Pub/Sub, Streams, Cluster/Sentinel, Redis Stack 모듈(JSON, Search)
