@@ -1,4 +1,6 @@
-"""예제 전체가 공유하는 Redis 연결 + 키 상태 확인 헬퍼."""
+"""예제 전체가 공유하는 Redis 연결, 키 상태 확인, 패턴 예제용 가짜 DB 헬퍼."""
+import time
+
 import redis
 
 REDIS_URL = "redis://localhost:6379/0"
@@ -29,3 +31,23 @@ def show(r, key):
     }[t]()
     return f"{key} [{t}, ttl={r.ttl(key)}] {value}"
 
+
+class FakeDB:
+    """실무 패턴 예제에서 DB 대신 쓰는 dict. calls로 DB가 몇 번 호출됐는지 확인한다."""
+
+    def __init__(self, data, delay=0.0):
+        self.data = data
+        self.delay = delay  # 느린 쿼리 흉내 (초)
+        self.log = []  # list.append는 스레드 안전 → len(log)로 호출 수를 센다
+
+    @property
+    def calls(self):
+        return len(self.log)
+
+    def get(self, id):
+        self.log.append(id)
+        time.sleep(self.delay)
+        return dict(self.data[id])
+
+    def update(self, id, **fields):
+        self.data[id].update(fields)

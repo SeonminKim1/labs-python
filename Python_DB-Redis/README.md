@@ -15,7 +15,7 @@
 uv run python ex1.py
 ```
 
-- `common.py`: 연결 `connect()`, 예제 키 초기화 `reset(r, prefix)`, 키 상태 확인 `show(r, key)`
+- `common.py`: 연결 `connect()`, 예제 키 초기화 `reset(r, prefix)`, 키 상태 확인 `show(r, key)`, 패턴 예제용 가짜 DB `FakeDB`(호출 횟수 `calls`)
 - 키 이름: `ex<번호>:<이름>`. 각 예제는 시작할 때 자기 키를 지우므로 재실행해도 결과가 같다
 - 확인: `docker exec -it my-redis redis-cli ...`
 
@@ -30,3 +30,7 @@ uv run python ex1.py
 | 5 | `ex5.py` | Hash (`hset(mapping=)`, `hget`/`hmget`/`hgetall`, `hincrby`, `hdel`, 값 타입 제한, 필드 TTL `hexpire`) |
 | 6 | `ex6.py` | Sorted Set (`zadd`, `zincrby`, `zrange(desc/byscore)`, `zrevrank`, `zcount`, `zremrangebyscore`, 동점 정렬) |
 | 7 | `ex7.py` | 파이프라인·트랜잭션 (`pipeline`, MULTI/EXEC 롤백 없음, `watch` + `WatchError`, `transaction()`) |
+| 8 | `ex8.py` | [패턴 1] 캐싱: Cache-Aside(조회 시 채움, 수정 시 삭제), Write-Through, TTL 지터 |
+| 9 | `ex9.py` | [패턴 2] 인증번호: TTL 만료, 성공 시 삭제(1회용), 실패 횟수 제한 |
+| 10 | `ex10.py` | [패턴 3] 분산 락: `SET NX PX`, 토큰 확인 해제(Lua `register_script`), `r.lock`, 캐시 스탬피드 + double-check |
+| 11 | `ex11.py` | [패턴 4] Rate Limit: 고정 윈도우(`incr` + `expire(nx=)`), 슬라이딩 윈도우(Sorted Set) |
