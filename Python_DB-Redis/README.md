@@ -26,3 +26,7 @@ uv run python ex1.py
 | 1 | `ex1.py` | 연결(`decode_responses`) + String (`set`/`get`, `nx`/`get=True`, `incr`, `mset`/`mget`, `getdel`) |
 | 2 | `ex2.py` | 키 관리·TTL (`ex`, `ttl` -1/-2, `expire(nx=)`, `persist`, `keepttl`, `exists`, `scan_iter` vs `keys`, `unlink`) |
 | 3 | `ex3.py` | List (`lpush`/`rpush`, `lrange`, `lpop`/`rpop`, `lrem`, `ltrim`, `blpop` 큐) |
+| 4 | `ex4.py` | Set (`sadd` 반환값, `smembers`/`sismember`/`smismember`, `srem`, `sinter`/`sunion`/`sdiff`) |
+| 5 | `ex5.py` | Hash (`hset(mapping=)`, `hget`/`hmget`/`hgetall`, `hincrby`, `hdel`, 값 타입 제한, 필드 TTL `hexpire`) |
+| 6 | `ex6.py` | Sorted Set (`zadd`, `zincrby`, `zrange(desc/byscore)`, `zrevrank`, `zcount`, `zremrangebyscore`, 동점 정렬) |
+| 7 | `ex7.py` | 파이프라인·트랜잭션 (`pipeline`, MULTI/EXEC 롤백 없음, `watch` + `WatchError`, `transaction()`) |
