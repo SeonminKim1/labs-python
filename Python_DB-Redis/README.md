@@ -38,5 +38,6 @@ uv run python ex1.py
 | 13 | `ex13.py` | [패턴 6] 분산 세션: Hash 세션, 요청마다 TTL 연장(sliding expiration), 필드 단위 수정 |
 | 14 | `ex14.py` | [패턴 7] 조회수·좋아요: `set(nx, ex)` 중복 조회 제거, `sadd` 좋아요 판정, `getdel` write-back |
 | 15 | `ex15.py` | [패턴 8] 실시간 랭킹: `zincrby`, 일별 키 + `zunionstore` 주간 합산, 동점 시 먼저 달성 우선, DB로 복구 |
+| 16 | `ex16.py` | Pub/Sub (`subscribe`/`publish` 반환값, 구독자 없으면 유실, `psubscribe` 패턴, 콜백 + `run_in_thread`) |
 
-제외: Pub/Sub, Streams, Cluster/Sentinel, Redis Stack 모듈(JSON, Search)
+제외: Streams, Cluster/Sentinel, Redis Stack 모듈(JSON, Search)
